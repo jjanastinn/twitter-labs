@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const expressLayouts = require('express-ejs-layouts');
 
+const authController = require('./routes/authController');
 const index = require('./routes/index');
 const users = require('./routes/users');
 
@@ -19,8 +20,10 @@ mongoose.connect('mongodb://localhost/twitter', {
 });
 
 // view engine setup
+app.use(expressLayouts);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('layout', 'layouts/main');
 
 // uncomment after placing your favicon in /public
 // app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -32,6 +35,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/', authController);
 
 // NOTE: requires a views/not-found.ejs template
 app.use(function (req, res, next) {
