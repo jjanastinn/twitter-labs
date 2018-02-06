@@ -89,13 +89,25 @@ authController.post('/login', (req, res, next) => {
       }
       if (bcrypt.compareSync(password, user.password)) {
         req.session.currentUser = user;
-        // res.redirect("/tweets");
+        res.redirect('/tweets');
       } else {
         res.render('auth/login', {
           errorMessage: 'Incorrect password'
         });
       }
     });
+});
+
+authController.get('/logout', (req, res, next) => {
+  if (!req.session.currentUser) { res.redirect('/'); return; }
+
+  req.session.destroy((err) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect('/login');
+    }
+  });
 });
 
 module.exports = authController;
